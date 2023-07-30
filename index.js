@@ -53,6 +53,14 @@ async function run() {
       res.send(result);
     })
 
+    app.get('/find-single-notice/:id', async(req, res) => {
+      const noticeId = req.params.id;
+      console.log(noticeId);
+      const query = {_id: new ObjectId(noticeId)};
+      const result = await noticeCollection.findOne(query);
+      res.send(result);
+    })
+
     // delete notice item
     app.delete('/delete-notice/:id', async (req, res) => {
       const noticeId = req.params.id;
