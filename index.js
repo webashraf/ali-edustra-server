@@ -34,6 +34,7 @@ async function run() {
 
     app.get('/user', async (req, res) => {
       const email = req.query.email;
+      console.log(email);
       const query = { userEmail: email }
       const result = await userCollection.findOne(query);
       res.send(result);
@@ -60,11 +61,27 @@ async function run() {
       const result = await noticeCollection.findOne(query);
       res.send(result);
     })
+    app.put('/update-single-notice/:id', async(req, res) => {
+      const noticeId = req.params.id;
+      const data = req.body;
+      const query = {_id: new ObjectId(noticeId)};
+      const options = {upsert: true};
+      const updatedData = {
+        $set:{
+          title: data.title,
+          notice: data.notice,
+          postTime: new Date()
+        }
+      }
+      const result = await noticeCollection.updateOne(query, updatedData, options);
+      res.send(result);
+      console.log(noticeId, data);
+    })
 
     // delete notice item
     app.delete('/delete-notice/:id', async (req, res) => {
       const noticeId = req.params.id;
-      console.log(noticeId);
+      console.log("noticeId", noticeId);
       const query = { _id: new ObjectId(noticeId) }
       const result = noticeCollection.deleteOne(query);
       res.send(result)
